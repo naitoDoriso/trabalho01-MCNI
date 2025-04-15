@@ -28,44 +28,48 @@ for line in f:
 E = np.array(E)
 f.close()
 
-# Plotando o grafo
-# plt.figure(1)
+# Plotando o grafo desconexo
+f = plt.figure(1)
 
-# for e in E:
-#     plt.plot(P[e,0], P[e,1], color="lightsteelblue", linewidth=0.5) # Plotando arestas
+for e in E:
+    plt.plot(P[e,0], P[e,1], color="lightsteelblue", linewidth=0.5) # Plotando arestas
 
-# plt.scatter(P[:,0], P[:,1], c="darkgrey", s=1) # Plotando os vertices
+plt.scatter(P[:,0], P[:,1], c="darkgrey", s=1) # Plotando os vertices
 
-# plt.title("Grafo desconexo")
-# plt.axis("equal")
-# plt.xlabel('x')
-# plt.ylabel('y')
-# plt.grid(True)
+plt.title("Grafo desconexo")
+plt.axis("equal")
+plt.xlabel('x')
+plt.ylabel('y')
+plt.grid(True)
+
+f.savefig("fig1.pdf")
 
 # Plotando todas as componentes conexas
 nc, idx = sp.csgraph.connected_components(sp.csr_matrix(A), directed=False)
 
-# plt.figure(2)
+f = plt.figure(2,figsize=(15,12))
 
-# for i in range(0,nc):
-# 	plt.subplot(2, 3, i+1)
+for i in range(0,nc):
+	plt.subplot(2, 3, i+1)
 
-# 	c = np.where(idx == i)[0]
+	c = np.where(idx == i)[0]
 
-# 	Pc = P[c,:]
-# 	Ac = A[np.ix_(c,c)]
-# 	Ec = np.array(np.where(Ac==1)).T
+	Pc = P[c,:]
+	Ac = A[np.ix_(c,c)]
+	Ec = np.array(np.where(Ac==1)).T
 
-# 	for e in Ec:
-# 		plt.plot(Pc[e,0], Pc[e,1], color="lightsteelblue", linewidth=0.5) # Plotando arestas
+	for e in Ec:
+		plt.plot(Pc[e,0], Pc[e,1], color="lightsteelblue", linewidth=0.5) # Plotando arestas
 
-# 	plt.scatter(Pc[:,0], Pc[:,1], c="darkgrey", s=1) # Plotando os vertices
+	plt.scatter(Pc[:,0], Pc[:,1], c="darkgrey", s=1) # Plotando os vertices
 
-# 	plt.title(f"Componente conexa {i+1}")
-# 	plt.axis("equal")
-# 	plt.xlabel('x')
-# 	plt.ylabel('y')
-# 	plt.grid(True)
+	plt.title(f"Componente conexa {i+1}")
+	plt.axis("equal")
+	plt.xlabel('x')
+	plt.ylabel('y')
+	plt.grid(True)
+ 
+f.savefig("fig2.pdf")
 
 # Obtendo maior componente conexa
 bc = np.where(idx == np.argmax(np.bincount(idx)))[0] # maior componente conexa
@@ -75,25 +79,27 @@ A = A[np.ix_(bc,bc)]
 E = np.array(np.where(A==1)).T
 
 # Plotando maior componente conexa
-# plt.figure(3)
+f = plt.figure(3)
 
-# for e in E:
-#     plt.plot(P[e,0], P[e,1], color="lightsteelblue", linewidth=0.5) # Plotando arestas
+for e in E:
+    plt.plot(P[e,0], P[e,1], color="lightsteelblue", linewidth=0.5) # Plotando arestas
 
-# plt.scatter(P[:,0], P[:,1], c="darkgrey", s=1) # Plotando os vertices
+plt.scatter(P[:,0], P[:,1], c="darkgrey", s=1) # Plotando os vertices
 
-# plt.title("Maior componente conexa")
-# plt.axis("equal")
-# plt.xlabel('x')
-# plt.ylabel('y')
-# plt.grid(True)
+plt.title("Maior componente conexa")
+plt.axis("equal")
+plt.xlabel('x')
+plt.ylabel('y')
+plt.grid(True)
+
+f.savefig("fig3.pdf")
 
 # Construindo o sistema
 G = np.diag(A.sum(axis=1)) # Matriz de grau
 L = G-A # Matriz Laplaciana
 
 n = A.shape[0]
-k = int(0.2/100 * n)
+k = int(5/100 * n) # 5% dos pontos
 
 np.random.seed(42)
 idx = np.random.choice(np.arange(0, n), size=k, replace=False) # Escolhendo 5% de pontos para condicao de contorno
