@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.sparse as sp
+import scipy.linalg as la
 
 # Coordenadas
 P = []
@@ -20,11 +21,11 @@ E = []
 
 f = open("manh.el", 'r')
 for line in f:
-	if line.strip():
-		i, j = map(int, line.strip().split())
-		E.append([i,j])
-		A[i,j] = 1
-		A[j,i] = 1
+        if line.strip():
+                i, j = map(int, line.strip().split())
+                E.append([i,j])
+                A[i,j] = 1
+                A[j,i] = 1
 E = np.array(E)
 f.close()
 
@@ -68,7 +69,7 @@ for i in range(0,nc):
 	plt.xlabel('x')
 	plt.ylabel('y')
 	plt.grid(True)
- 
+
 f.savefig("fig2.pdf")
 
 # Obtendo maior componente conexa
@@ -135,8 +136,111 @@ f.savefig("fig4.pdf")
 # Resolvendo o sistema de forma direta
 T = np.linalg.solve(M,c)
 
+def funcao_cholesky(M, c):
+    """
+    Resolve o sistema M*x = c usando a decomposição de Cholesky.
+
+    Parametros:
+    M (numpy.ndarray): Matriz M>0 positiva
+    c (numpy.ndarray): Vetor resultante
+
+    Retorna:
+    numpy.ndarray: O vetor sol. x onde M*x = c
+    """
+    # Calcula a decomp. de Cholesky: M = L*L^T
+    L = la.cholesky(M, lower=True)
+
+    # Resolve a matriz triangular L*y = c
+    y = la.solve_triangular(L, c, lower=True)
+
+    # Resolve a transposta da matriz triang L^T*x = y
+    x = la.solve_triangular(L.T, y, lower=False)
+
+    return x
+
+
+def funcao_lu(M,c):
+	#Calculando a demposicao LU: M= P*L*U, onde P eh uma matriz de permutacao
+	P,L,U = la.lu(M)
+
+	#Resolvendo Ly=Pc
+	Pc= P @ c
+	y = la.solve_triangular(L, Pc, lower=True)
+
+	#Resolve Ux=y
+	x = la.solve_triangular(U, y, lower=False)
+
+	return x
+
+def funcao_qr(M, c):
+
+	#Calculando a decomp. QR: M=QR
+	Q, R = la.qr(M)
+
+	#Resolvendo Rx=Q.Tc
+	Qtc = Q.T @ c
+	x = la.solve_triangular(R, Qtc, lower=False)
+	return x
+
+import time
+
+tempos = []
+metods = ["np.linalg.solve", "Cholesky", "LU", "QR"]
+
+#Tempo metodo direto
+beg= time.time()
+T_numpy = np.linalg.solve(M,c)
+end = time.time()
+tempos.append(end-beg)
+print(f"Tempo de execução usando numpy.linalg.solve: {tempos[0]:.6f} segundos")
+
+#Tempo Metodo Cholesky
+
+beg1= time.time()
+T_cholesky = funcao_cholesky(M,c)
+end1 = time.time()
+tempos.append(end1-beg1)
+print(f"Tempo de execução usando Cholesky: {tempos[1]:.6f} segundos")
+
+#Tempo Metodo LU
+beg2 = time.time()
+T_lu = funcao_lu(M,c)
+end2 = time.time()
+tempos.append(end2-beg2)
+print(f"Tempo de execução usando LU: {tempos[2]:.6f} segundos")
+
+#Tempo Metodo QR
+beg3 = time.time()
+T_qr = funcao_qr(M, c)
+end3 = time.time()
+tempos.append(end3 - beg3)
+print(f"Tempo de execução usando QR: {tempos[3]:.6f} segundos")
+
+# Verificando se todas as soluções são equivalentes
+print("\nVerificação de equivalência das soluções:")
+print(f"np.linalg.solve vs Cholesky: {np.allclose(T_numpy, T_cholesky)}")
+print(f"np.linalg.solve vs LU: {np.allclose(T_numpy, T_lu)}")
+print(f"np.linalg.solve vs QR: {np.allclose(T_numpy, T_qr)}")
+
+# Plotando o graf de barras comparando os tempos
+f = plt.figure(6, figsize=(10, 6))
+plt.bar(metods, tempos, color='skyblue')
+plt.ylabel('Tempo de execução (segundos)')
+plt.title('Comparação de tempo entre diferentes métodos de solução')
+plt.grid(True, axis='y', linestyle='--', alpha=0.7)
+
+# Adicionando o tempo em cima das barras
+for i, tempo in enumerate(tempos):
+    plt.text(i, tempo + max(tempos)*0.01, f'{tempo:.6f}',
+             ha='center', va='bottom', fontsize=9)
+
+f.savefig("fig6.pdf")
+
+T = T_cholesky
+
 f = plt.figure(5)
 
+T = funcao_cholesky(M,c)
 for e in E:
     plt.plot(P[e,0], P[e,1], color="gainsboro", linewidth=0.5) # Plotando arestas
 
