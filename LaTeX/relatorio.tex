@@ -6,6 +6,7 @@
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
 
 \title{(Universidade de São Paulo)\\
 Trabalho 01 - Temperaturas no Grafo de Manhattan}
@@ -97,6 +98,183 @@ Vinícius de Sá Ferreira -- 15491650}
 
     \newpage
 
+    \section{Métodos diretos}
+
+    \subsection{Método de Cholesky}
+
+    Suponhamos que $M$ seja uma matriz triangular simples, mais precisamente, uma matriz pequena, triangular e bem-comportada, então, pela teoria, achar na $M^{-1}$ explicitamente não seria algo muito complexo. Exemplo:
+
+    \[
+    \begin{bmatrix}
+    2 & 1 & 3 \\
+    0 & 1 & 2 \\
+    0 & 0 & 4
+    \end{bmatrix}
+    \]
+
+    Acharemos $U^{-1}$ usando $[U|I] \rightarrow [I|U^{-1}]$:
+
+    \[
+    [U|I] = 
+    \begin{bmatrix}
+    2 & 1 & 3 & \vline & 1 & 0 & 0 \\
+    0 & 1 & 2 & \vline & 0 & 1 & 0 \\
+    0 & 0 & 4 & \vline & 0 & 0 & 1
+    \end{bmatrix}
+    \rightarrow
+    \begin{bmatrix}
+    1 & 1/2 & 3/2 & \vline &  1/2 & 0 & 0 \\
+    0 & 1 & 2 & \vline & 0 &  1 & 0 \\
+    0 & 0 & 1 & \vline & 0 &  0 & 1/4
+    \end{bmatrix}
+    \]
+
+    \[
+    \begin{bmatrix}
+    1 & 1/2 & 0 & \vline & 1/2 & 0 & -3/8 \\
+    0 & 1 & 0 & \vline & 0 & 1 & -1/2 \\
+    0 & 0 & 1 & \vline & 0 & 0 & 1/4
+    \end{bmatrix}
+    \rightarrow
+    \begin{bmatrix}
+    1 & 0 & 0 & \vline & 1/2 & -1/2 & -1/8 \\
+    0 & 1 & 0 & \vline & 0 & 1 & -1/2 \\
+    0 & 0 & 1 & \vline & 0 & 0 & 1/4
+    \end{bmatrix}
+    \]
+
+    \[
+    U^{-1} =
+    \begin{bmatrix}
+    1/2 & -1/2 & -1/8 \\
+    0 & 1 & -1/2 \\
+    0 & 0 & 1/4
+    \end{bmatrix}
+    \]
+
+    Mas se tivermos uma matriz geral (não necessariamente triangular), mas invertível, de entradas significativamente grandes (com linhas, colunas na casa dos milhares), então o número de operações para computar a inversa explicitamente pelo algoritmo de Gauss-Jordan (demonstrado de forma simplificada no exemplo acima com a matriz triangular) cresceria cubicamente com o tamanho $N$ da matriz, ou seja, seria $O(N^3)$ no que tange à análise assintótica. Pois, em termos simples, há $O(N)$ passos principais (um para cada coluna/pivô) na eliminação, e em cada passo, se opera em $O(N)$ linhas abaixo/acima do pivô, afetando $O(N)$ elementos em cada linha - as colunas à direita. A complexidade vem de algo como $O(N \text{ passos}) * O(N \text{ linhas afetadas}) * O(N \text{ operações por elemento}) = O(N^3)$. Para o computador, calcular a inversa explicitamente é, portanto, custoso. Para o humano, bem, deixaremos a discussão de lado.
+
+    Para contra-atacar o alto custo da complexidade computacional na resolução do sistema $M x = k$, assumindo que a matriz seja simétrica e def. positiva, podemos pensar em fatorizar a matriz em questão em $M = LL^T$, onde $L$ é uma matriz triangular inferior (e $L^T$ é triangular superior). A própria fatorização de Cholesky tem um custo da ordem de $O(N^3)$ (embora geralmente com uma constante menor que a da inversão). Mas a vantagem crucial vem a seguir: em vez de calcular $M^{-1}$, resolvemos o sistema original $(LL^T)x = k$ em duas etapas, introduzindo $y = L^T x$:
+
+    \begin{enumerate}
+        \item Resolver $Ly = k$ para $y$ usando substituição \textbf{direta}.
+        \item Resolver $L^T x = y$ para $x$ usando substituição \textbf{retroativa}.
+    \end{enumerate}
+
+    Cada uma dessas etapas de substituição tem um custo muito menor, da ordem de $O(N^2)$. Portanto, após o custo inicial da fatorização ($O(N^3)$), a solução do sistema em si é muito menos complexa ($O(N^2)$) do que calcular a inversa completa ($O(N^3)$) e depois multiplicar por $k$ ($O(N^2)$). É nisso que o algoritmo de Cholesky se baseia para ser eficiente na resolução de sistemas lineares.
+
+    \subsubsection{Conexão com o código}
+
+    A fatoração da decomposição da matriz $M$ no produto de uma matriz triangular inferior $L$ e sua transposta $L^T$ é realizada pela função abaixo no código.
+
+    \begin{center}
+    \includegraphics[width=0.8\linewidth]{imgs/cholesky_1.png}
+    \end{center}
+
+    Depois de obter $L$, a solução é encontrada resolvendo dois sistemas triangulares sequencialmente e retornando o vetor $x$:
+
+    \begin{center}
+    \includegraphics[width=0.8\linewidth]{imgs/cholesky_2.png}
+    \end{center}
+
+    Embora a etapa de fatoração ainda domine a complexidade ($O(N^3)$), a constante multiplicativa é menor do que em métodos como LU ou QR para matrizes densas, o cálculo de comparação do tempo de execução será discutido mais posteriormente.
+
+    \subsection{Método LU}
+
+    Fazendo uma breve comparação com o método de Cholesky, o algoritmo LU não requer que a matriz $M$ seja simétrica ou definida positiva, basta que ela seja quadrada e invertível - isso generaliza as aplicações de uma forma significativa.
+
+    Porém mesmo para matrizes quadradas e invertíveis com entradas muito grandes, calcular a inversa $M^{-1}$ diretamente (explicitamente) ou usar métodos muito básicos tende a ser computacionalmente caro (complexidade $O(N^3)$) e propenso a erros numéricos.
+
+    A saída seria usar a decomposição LU que se consiste em fatorar a matriz $M$ de forma a simplificar a resolução do sistema. E para evitar divisões por zero ou números muito pequenos, o processo pode incluir pivotamento, que troca as linhas da matriz durante a fatoração. Em suma, isso resulta na decomposição:
+    \[ M = PLU \]
+    onde:
+
+    \begin{itemize}[leftmargin=*]
+        \item $P$ é uma matriz de permutação;
+        \item $L$ é uma matriz triangular inferior;
+        \item $U$ é uma matriz triangular superior.
+    \end{itemize}
+
+    \subsubsection{Resolução do Sistema com Decomposição LU}
+
+    Com essa fatoração, o sistema $MT = c$ se torna $PLUT = c$. Podemos resolver isso em duas etapas, envolvendo sistemas triangulares, que já sabemos que são mais fáceis e rápidos de resolver (complexidade $O(N^2)$ cada):
+
+    \begin{enumerate}
+        \item Resolver $Ly = Pc$ para achar um vetor intermediário $y$. (Note que aplicamos a permutação $P$ ao vetor $c$).
+        \item Resolver $UT = y$ para achar a solução final $T$
+    \end{enumerate}
+
+    A etapa mais custosa ainda é a fatoração $M = PLU$, que tem complexidade $O(N^3)$ (aproximadamente $\dfrac{2}{3}N^3$ operações para matrizes densas). Em teoria, esse método tem a mesma ordem de complexidade de Cholesky, mas na prática LU geralmente requer mais operações por não explorar a simetria da matriz (quando presente).
+
+    \subsubsection{Conexão com o código}
+
+    Fatoração da matriz $M$ no produto $PLU$:
+
+    \begin{center}
+    \includegraphics[width=0.8\linewidth]{imgs/lu_1.png}
+    \end{center}
+
+    Ao obter $P$, $L$, e $U$, encontramos $T$ resolvendo os dois sistemas triangulares sequencialmente, como implementado na função funcao\_lu:
+
+    \begin{center}
+    \includegraphics[width=0.8\linewidth]{imgs/lu_2.png}
+    \end{center}
+
+    \subsection{Método QR}
+
+    De praxe, a decomposição QR é outro método fundamental para resolver sistemas lineares, porém com uma excelente estabilidade numérica, sendo particularmente robusto mesmo para matrizes mal-condicionadas. O método é aplicável a matrizes quadradas invertíveis gerais e não requer simetria ou definição positiva, também é a base para muitos algoritmos de autovalores e problemas de mínimos quadrados.
+
+    A ideia central da decomposição QR é fatorar a matriz $M$ no produto de uma matriz ortogonal $Q$ e uma matriz triangular superior $R$:
+    \[ M = QR \]
+    onde:
+
+    \begin{itemize}
+        \item $Q$ é uma matriz ortogonal. Isso significa que suas colunas formam um conjunto ortonormal de vetores, e sua transposta é comutativa à sua inversa ($Q^TQ = QQ^T = I$, onde $I$ é a matriz identidade). Multiplicar por $Q$ ou $Q^T$ preserva normas e ângulos, o que contribui para a estabilidade numérica.
+        
+        \item $R$ é uma matriz triangular superior.
+    \end{itemize}
+
+    Com a fatoração $M = QR$, o sistema original $MT = c$ se torna $QRT = c$. Para isolar $T$, multiplicamos ambos os lados pela transposta (que é a inversa) de $Q$:
+
+    \begin{align*}
+    Q^T (QRT) &= Q^T c \\
+    (Q^TQ)RT &= Q^T c \\
+    I RT &= Q^T c \\
+    RT &= Q^T c
+    \end{align*}
+
+    Isso resulta em um sistema triangular superior $RT = Q^T c$, que pode ser resolvido eficientemente por substituição retroativa (complexidade $O(N^2)$).
+
+    A etapa computacionalmente mais intensiva é a própria fatoração $M = QR$. Existem diferentes algoritmos para computá-la (como Gram-Schmidt modificado, transformações de Householder ou rotações de Givens). Para matrizes densas, a complexidade da fatoração QR é geralmente $O(N^3)$, tipicamente com uma constante maior do que a da decomposição LU (aproximadamente $\frac{4}{3}N^3$ operações usando Householder). Portanto, embora seja muito estável, tende a ser mais custoso que LU ou Cholesky (quando aplicável) para a simples solução de sistemas lineares quadrados.
+
+    \subsubsection{Conexão com o código}
+
+    Fatoração da matriz $M$ no produto $QR$:
+
+    \begin{center}
+    \includegraphics[width=0.8\linewidth]{imgs/qr_1.png}
+    \end{center}
+
+    Após obter $Q$ e $R$, a solução $T$ é encontrada calculando $Q^T c$ e depois resolvendo o sistema triangular $RT = Q^T c$, como implementado na função funcao\_qr:
+
+    \begin{center}
+    \includegraphics[width=0.8\linewidth]{imgs/qr_2.png}
+    \end{center}
+
+    \hypertarget{1}{}
+
+    \subsection{Resultados}
+
+    Os tempos de execução registrados para cada método foram plotados no gráfico de barras, observada na \hyperlink{2}{\texttt{Figura 5}}. Ao fazer a análise, observa-se que, para a matriz $M$ específica deste problema, que é simétrica e definida positiva (se trata de um grafo), o método de Cholesky apresentou o melhor desempenho, sendo o mais rápido entre as implementações baseadas em decomposição.
+
+    Isso está de acordo com a teoria e o que foi estudado nas análises dos métodos que conduzimos, pois Cholesky explora a simetria da matriz, resultando em aproximadamente metade das operações de ponto flutuante em comparação com a decomposição LU para matrizes densas (aproximadamente $\dfrac{1}{3}N^3$ vs $\dfrac{2}{3}N^3$ operações para a fatoração). A função \texttt{numpy.linalg.solve}, sendo uma aplicação altamente otimizada (frequentemente baseada em implementações LAPACK), apresentou um desempenho muito competitivo, potencialmente detectando a natureza da matriz e utilizando um solver apropriado internamente.
+
+    Além do mais, no que tange à análise minuciosa, a decomposição LU foi mais lenta que Cholesky, como esperado, por ser um método mais geral. A decomposição QR, embora robusta numericamente, tende a ser a mais custosa computacionalmente para a solução de sistemas lineares (com uma constante associada à complexidade $O(N^3)$ tipicamente maior, como $\dfrac{4}{3}N^3$ para métodos baseados em Householder), o que se refletiu em seu tempo de execução sendo o mais elevado entre os quatro métodos testados.
+
+    Em suma, para o sistema linear derivado deste problema específico, a decomposição de Cholesky é a escolha mais eficiente em termos de tempo de execução, devido às propriedades favoráveis da matriz $M$. A função genérica \texttt{numpy.linalg.solve} também se mostrou extremamente eficaz. A escolha entre LU e QR dependeria de um balanço entre generalidade, custo computacional e requisitos de estabilidade numérica, sendo QR preferível em casos de matrizes mal-condicionadas, apesar de seu maior custo.
+
+    \newpage
+
     \section{Métodos iterativos}
 
     \subsection{Gauss-Jacobi}
@@ -176,6 +354,8 @@ Vinícius de Sá Ferreira -- 15491650}
     
     Por fim, o método convergiu em $k = 255$ iterações e demorou uma média de $30s$ para uma tolerância de $\pm 10^{-3}$.
 
+    \hypertarget{3}{}
+
     \subsection{Resultados}
 
     Tolerância: $\pm 10^{-3}$.
@@ -191,29 +371,33 @@ Vinícius de Sá Ferreira -- 15491650}
         \hline
     \end{array}\]
 
-    \section{Métodos diretos}
-
-    $\cdots$
+    É possível observar os tempos exatos de execução na \hyperlink{4}{\texttt{Figura 7}}.
 
     \section{Resultado obtido}
 
     \begin{figure}[ht]
         \centering
         \includegraphics[width=0.6\textwidth, trim={0 .3cm 0 .9cm},clip]{../figs/fig1.pdf}
+        
+        Figura 1
     \end{figure}
 
     \newpage
 
     \begin{figure}[ht]
         \centering
-        \includegraphics[width=0.9\textwidth, trim={0 2.3cm 0 3.1cm},clip]{../figs/fig2.pdf}
+        \includegraphics[width=0.8\textwidth, trim={0 2.3cm 0 3.1cm},clip]{../figs/fig2.pdf}
+        
+        Figura 2
     \end{figure}
 
     \vspace{3cm}
 
     \begin{figure}[ht]
         \centering
-        \includegraphics[width=0.64\textwidth, trim={0 10px 0 25px},clip]{../figs/fig3.pdf}
+        \includegraphics[width=0.6\textwidth, trim={0 10px 0 25px},clip]{../figs/fig3.pdf}
+        
+        Figura 3
     \end{figure}
 
     \newpage
@@ -221,11 +405,16 @@ Vinícius de Sá Ferreira -- 15491650}
     \begin{figure}[ht]
         \centering
         \includegraphics[width=0.7\textwidth, trim={0 10px 0 25px},clip]{../figs/fig4.pdf}
+        
+        Figura 4
     \end{figure}
 
+    \hypertarget{2}{}
     \begin{figure}[ht]
         \centering
-        \includegraphics[width=1\textwidth, trim={0 10px 0 25px},clip]{../figs/fig5.pdf}
+        \includegraphics[width=0.9\textwidth, trim={0 10px 0 25px},clip]{../figs/fig5.pdf}
+        
+        \hyperlink{1}{Figura 5}
     \end{figure}
 
     \newpage
@@ -233,10 +422,15 @@ Vinícius de Sá Ferreira -- 15491650}
     \begin{figure}[ht]
         \centering
         \includegraphics[width=0.7\textwidth, trim={0 10px 0 25px},clip]{../figs/fig6.pdf}
+        
+        Figura 6
     \end{figure}
 
+    \hypertarget{4}{}
     \begin{figure}[ht]
         \centering
-        \includegraphics[width=1\textwidth, trim={0 10px 0 25px},clip]{../figs/fig7.pdf}
+        \includegraphics[width=0.9\textwidth, trim={0 10px 0 25px},clip]{../figs/fig7.pdf}
+        
+        \hyperlink{3}{Figura 7}
     \end{figure}
 \end{document}
