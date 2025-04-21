@@ -267,7 +267,7 @@ def GradConj(M,c):
 	r0 = c-(M @ x0)
 	p0 = r0
 
-	a = (r0.T @ r0)/(r0.T @ M @ r0)
+	a = (r0.T @ r0)/(p0.T @ M @ p0)
 	x = x0 + a*p0
 	r = r0 - a*(M @ p0)
 	p = p0
