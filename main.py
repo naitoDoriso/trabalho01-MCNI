@@ -49,7 +49,7 @@ f.savefig("fig1.pdf")
 ## Plotando todas as componentes conexas
 nc, idx = sp.csgraph.connected_components(sp.csr_matrix(A), directed=False)
 
-f = plt.figure(2,figsize=(15,12))
+f = plt.figure(2,figsize=(23,14))
 
 for i in range(0,nc):
 	plt.subplot(2, 3, i+1)
@@ -106,7 +106,7 @@ b = np.zeros((n,1))
 b[idx,0] = np.random.uniform(20, 30, size=k) # Escolhendo temperaturas T, com 20°C <= T < 30°C para condicao de contorno
 
 ## Plotando a maior componente conexa com os pontos fixos
-f = plt.figure(4)
+f = plt.figure(4,figsize=(10, 6))
 
 for e in E:
     plt.plot(P[e,0], P[e,1], color="gainsboro", linewidth=0.5) # Plotando arestas
@@ -115,7 +115,7 @@ plt.scatter(P[:,0], P[:,1], c="darkgrey", s=1) # Plotando os vertices
 plt.scatter(P[idx,0], P[idx,1], c=b[idx], cmap="jet", s=2, zorder=2) # Plotando os vertices fixos
 plt.colorbar()
 
-plt.title(r"Temperatura fixa em 5% dos pontos")
+plt.title(f"Temperatura fixa em 5% dos pontos ({k} pontos de um total de {n})")
 plt.axis("equal")
 plt.xlabel('x')
 plt.ylabel('y')
@@ -135,8 +135,6 @@ M = L+MP
 c = MP@b
 
 ## Resolvendo o sistema por metodos diretos
-T = np.linalg.solve(M,c)
-
 def Cholesky(M, c):
     """
     Resolve o sistema M*x = c usando a decomposição de Cholesky.
@@ -188,25 +186,25 @@ metods = ["np.linalg.solve", "Cholesky", "LU", "QR"]
 
 #Tempo Metodo Direto
 beg= time.time()
-aux = np.linalg.solve(M,c)
+Td = np.linalg.solve(M,c)
 end = time.time()
 tempos.append(end-beg)
 
 #Tempo Metodo Cholesky
 beg1= time.time()
-T = Cholesky(M,c)
+T = Tc = Cholesky(M,c)
 end1 = time.time()
 tempos.append(end1-beg1)
 
 #Tempo Metodo LU
 beg2 = time.time()
-LU(M,c)
+Tl = LU(M,c)
 end2 = time.time()
 tempos.append(end2-beg2)
 
 #Tempo Metodo QR
 beg3 = time.time()
-QR(M, c)
+Tq = QR(M, c)
 end3 = time.time()
 tempos.append(end3 - beg3)
 
@@ -215,7 +213,7 @@ f = plt.figure(5, figsize=(10, 6))
 
 plt.bar(metods, tempos, color='skyblue')
 plt.ylabel('Tempo de execução (segundos)')
-plt.title('Comparação de tempo entre diferentes métodos de solução')
+plt.title('Comparação de tempo entre métodos diretos')
 plt.grid(True, axis='y', linestyle='--', alpha=0.7)
 
 # Adicionando o tempo em cima das barras
@@ -292,25 +290,45 @@ def GradConj(M,c):
 		erro = 1
 	return [x,k,erro]
 
-## Calcundo o numero de iteracoes e os tempos
+
 tol = 1.0e-3
 
 st = time.time()
-GaussJacobi(M,c)
+[Tj,k,_] = GaussJacobi(M,c)
+print(k)
 end = time.time()
-TJ = end-st
+tj = end-st
 
 st = time.time()
-GaussSeidel(M,c)
+[Ts,k,_] = GaussSeidel(M,c)
+print(k)
 end = time.time()
-TS = end-st
+ts = end-st
 
 st = time.time()
-GradConj(M,c)
+[Tg,k,_] = GradConj(M,c)
+print(k)
 end = time.time()
-TG = end-st
+tg = end-st
 
-f = plt.figure(6)
+## Plotando o grafico de barras comparando os tempos
+f = plt.figure(6, figsize=(10, 6))
+
+tempos = [tj,ts,tg]
+plt.bar(["Gauss Jacobi", "Gauss Seidel", "Gradientes Conjugados"], tempos, color='skyblue')
+plt.ylabel('Tempo de execução (segundos)')
+plt.title('Comparação de tempo entre métodos iterativos')
+plt.grid(True, axis='y', linestyle='--', alpha=0.7)
+
+# Adicionando o tempo em cima das barras
+for i, tempo in enumerate(tempos):
+    plt.text(i, tempo + max(tempos)*0.01, f'{tempo:.6f}',
+             ha='center', va='bottom', fontsize=9)
+
+f.savefig("fig6.pdf")
+
+## Plotando a interpolacao no grafico
+f = plt.figure(7)
 
 for e in E:
     plt.plot(P[e,0], P[e,1], color="gainsboro", linewidth=0.5) # Plotando arestas
@@ -324,21 +342,37 @@ plt.xlabel('x')
 plt.ylabel('y')
 plt.grid(True)
 
-f.savefig("fig6.pdf")
+f.savefig("fig7.pdf")
 
-f = plt.figure(7, figsize=(10, 6))
+## Analisando o erro dos metodos
+f = plt.figure(8, figsize=(10, 6))
 
-tempos = [TJ,TS,TG]
-plt.bar(["Gauss Jacobi", "Gauss Seidel", "Gradientes Conjugados"], tempos, color='skyblue')
-plt.ylabel('Tempo de execução (segundos)')
-plt.title('Comparação de tempo entre diferentes métodos de solução')
+r = [np.linalg.norm(c-M@Td), np.linalg.norm(c-M@Tc), np.linalg.norm(c-M@Tl), np.linalg.norm(c-M@Tq)]
+plt.bar(["np.linalg.solve", "Cholesky", "LU", "QR"], r, color='skyblue')
+plt.ylabel('Erro')
+plt.title('Comparação do resíduo entre métodos diretos')
 plt.grid(True, axis='y', linestyle='--', alpha=0.7)
 
-# Adicionando o tempo em cima das barras
-for i, tempo in enumerate(tempos):
-    plt.text(i, tempo + max(tempos)*0.01, f'{tempo:.6f}',
+# Adicionando o erro em cima das barras
+for i, x in enumerate(r):
+    plt.text(i, x + max(r)*0.01, f'{x:.7f}',
              ha='center', va='bottom', fontsize=9)
 
-f.savefig("fig7.pdf")
+f.savefig("fig8.pdf")
+
+f = plt.figure(9, figsize=(10, 6))
+
+r = [np.linalg.norm(c-M@Tj), np.linalg.norm(c-M@Ts), np.linalg.norm(c-M@Tg)]
+plt.bar(["Gauss Jacobi", "Gauss Seidel", "Gradientes Conjugados"], r, color='skyblue')
+plt.ylabel('Erro')
+plt.title('Comparação do resíduo entre métodos iterativos')
+plt.grid(True, axis='y', linestyle='--', alpha=0.7)
+
+# Adicionando o erro em cima das barras
+for i, x in enumerate(r):
+    plt.text(i, x + max(r)*0.01, f'{x:.6f}',
+             ha='center', va='bottom', fontsize=9)
+
+f.savefig("fig9.pdf")
 
 plt.show()

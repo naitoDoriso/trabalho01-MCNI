@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.2.21)  21 APR 2025 19:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2024.2.21)  22 APR 2025 21:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -400,39 +400,51 @@ File: ../figs/fig1.pdf Graphic file (type pdf)
 Package pdftex.def Info: ../figs/fig1.pdf  used on input line 380.
 (pdftex.def)             Requested size: 283.22162pt x 191.51863pt.
  [9 <../figs/fig1.pdf>]
-<../figs/fig2.pdf, id=180, 1084.05pt x 867.24pt>
+<../figs/fig2.pdf, id=180, 1662.21pt x 1011.78pt>
 File: ../figs/fig2.pdf Graphic file (type pdf)
 <use ../figs/fig2.pdf>
-Package pdftex.def Info: ../figs/fig2.pdf  used on input line 389.
-(pdftex.def)             Requested size: 377.62642pt x 248.5751pt.
-<../figs/fig3.pdf, id=182, 462.52798pt x 346.89601pt>
+Package pdftex.def Info: ../figs/fig2.pdf  used on input line 393.
+(pdftex.def)             Requested size: 472.03123pt x 293.00343pt.
+ [10 <../figs/fig2.pdf>]
+<../figs/fig3.pdf, id=223, 462.52798pt x 346.89601pt>
 File: ../figs/fig3.pdf Graphic file (type pdf)
 <use ../figs/fig3.pdf>
-Package pdftex.def Info: ../figs/fig3.pdf  used on input line 398.
-(pdftex.def)             Requested size: 283.22162pt x 190.91351pt.
- [10 <../figs/fig2.pdf> <../figs/fig3.pdf>]
-<../figs/fig4.pdf, id=257, 462.52798pt x 346.89601pt>
+Package pdftex.def Info: ../figs/fig3.pdf  used on input line 402.
+(pdftex.def)             Requested size: 330.42041pt x 232.82866pt.
+<../figs/fig4.pdf, id=225, 722.7pt x 433.62pt>
 File: ../figs/fig4.pdf Graphic file (type pdf)
 <use ../figs/fig4.pdf>
-Package pdftex.def Info: ../figs/fig4.pdf  used on input line 407.
-(pdftex.def)             Requested size: 330.42041pt x 222.72926pt.
-<../figs/fig5.pdf, id=259, 722.7pt x 433.62pt>
+Package pdftex.def Info: ../figs/fig4.pdf  used on input line 411.
+(pdftex.def)             Requested size: 330.42041pt x 206.24559pt.
+ [11 <../figs/fig3.pdf> <../figs/fig4.pdf>]
+<../figs/fig5.pdf, id=306, 722.7pt x 433.62pt>
 File: ../figs/fig5.pdf Graphic file (type pdf)
 <use ../figs/fig5.pdf>
-Package pdftex.def Info: ../figs/fig5.pdf  used on input line 415.
-(pdftex.def)             Requested size: 424.82523pt x 234.24284pt.
- [11 <../figs/fig4.pdf> <../figs/fig5.pdf>]
-<../figs/fig6.pdf, id=355, 462.52798pt x 346.89601pt>
+Package pdftex.def Info: ../figs/fig5.pdf  used on input line 421.
+(pdftex.def)             Requested size: 377.62642pt x 214.17131pt.
+<../figs/fig6.pdf, id=309, 722.7pt x 433.62pt>
 File: ../figs/fig6.pdf Graphic file (type pdf)
 <use ../figs/fig6.pdf>
-Package pdftex.def Info: ../figs/fig6.pdf  used on input line 424.
-(pdftex.def)             Requested size: 330.42041pt x 222.72926pt.
-<../figs/fig7.pdf, id=357, 722.7pt x 433.62pt>
+Package pdftex.def Info: ../figs/fig6.pdf  used on input line 431.
+(pdftex.def)             Requested size: 377.62642pt x 214.17131pt.
+ [12 <../figs/fig5.pdf> <../figs/fig6.pdf>]
+<../figs/fig7.pdf, id=409, 462.52798pt x 346.89601pt>
 File: ../figs/fig7.pdf Graphic file (type pdf)
 <use ../figs/fig7.pdf>
-Package pdftex.def Info: ../figs/fig7.pdf  used on input line 432.
-(pdftex.def)             Requested size: 424.82523pt x 234.24284pt.
- [12 <../figs/fig6.pdf> <../figs/fig7.pdf>] (./relatorio.aux)
+Package pdftex.def Info: ../figs/fig7.pdf  used on input line 444.
+(pdftex.def)             Requested size: 472.03123pt x 375.17178pt.
+ [13 <../figs/fig7.pdf>]
+<../figs/fig8.pdf, id=452, 722.7pt x 433.62pt>
+File: ../figs/fig8.pdf Graphic file (type pdf)
+<use ../figs/fig8.pdf>
+Package pdftex.def Info: ../figs/fig8.pdf  used on input line 453.
+(pdftex.def)             Requested size: 377.62642pt x 214.17131pt.
+<../figs/fig9.pdf, id=454, 722.7pt x 433.62pt>
+File: ../figs/fig9.pdf Graphic file (type pdf)
+<use ../figs/fig9.pdf>
+Package pdftex.def Info: ../figs/fig9.pdf  used on input line 462.
+(pdftex.def)             Requested size: 377.62642pt x 214.17131pt.
+ [14 <../figs/fig8.pdf> <../figs/fig9.pdf>] (./relatorio.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
@@ -441,18 +453,18 @@ Package rerunfilecheck Info: File `relatorio.out' has not changed.
 (rerunfilecheck)             Checksum: 6B823A5C6E6D76F272A3307FE0B17D61;2375.
  ) 
 Here is how much of TeX's memory you used:
- 11040 strings out of 474137
- 167695 string characters out of 5747003
+ 11056 strings out of 474137
+ 168077 string characters out of 5747003
  1950187 words of memory out of 5000000
- 33202 multiletter control sequences out of 15000+600000
+ 33216 multiletter control sequences out of 15000+600000
  566435 words of font info for 69 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,13n,79p,1037b,518s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/latxfont/line10.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></home/nait/texlive/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on relatorio.pdf (12 pages, 4368719 bytes).
+Output written on relatorio.pdf (14 pages, 4399801 bytes).
 PDF statistics:
- 529 PDF objects out of 1000 (max. 8388607)
- 232 compressed objects within 3 object streams
- 45 named destinations out of 1000 (max. 500000)
- 236 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 628 PDF objects out of 1000 (max. 8388607)
+ 251 compressed objects within 3 object streams
+ 47 named destinations out of 1000 (max. 500000)
+ 258 words of extra memory for PDF output out of 10000 (max. 10000000)
 
