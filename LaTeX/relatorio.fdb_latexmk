@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1745711500.98284 "/home/nait/Documents/USP/3SEM/CNUM/S3/LaTeX/relatorio.tex" "relatorio.pdf" "relatorio" 1745711504.37994 0
+["pdflatex"] 1745757886.77583 "/home/nait/Documents/USP/3SEM/CNUM/S3/LaTeX/relatorio.tex" "relatorio.pdf" "relatorio" 1745757890.27744 0
   "../figs/fig1.pdf" 1745705408.80974 401980 ef23c478ca94abd34b0c03d3c46859e7 ""
   "../figs/fig10.pdf" 1745707497.0928 413029 f9da7af0ed8b46134646ba63727e8ac5 ""
   "../figs/fig11.pdf" 1745707627.18646 17255 9112bff6163924035d579ad38e665866 ""
@@ -15,7 +15,7 @@
   "../figs/fig7.pdf" 1745707480.15684 463049 3608996681e68b1a2071dd9be2bacf54 ""
   "../figs/fig8.pdf" 1745707480.92784 15134 cfe72cc4c007a33a0815c29fc3b06812 ""
   "../figs/fig9.pdf" 1745707481.34184 16528 84f1c127eaca39ed8147dd77a524592f ""
-  "/home/nait/Documents/USP/3SEM/CNUM/S3/LaTeX/relatorio.tex" 1745711497.88304 24443 43860cd50bd64d05570e70dbf662093f ""
+  "/home/nait/Documents/USP/3SEM/CNUM/S3/LaTeX/relatorio.tex" 1745757885.95276 24443 d882a7c6d2a42d5df300a32c2fb287d4 ""
   "/home/nait/texlive/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/home/nait/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/home/nait/texlive/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -123,9 +123,9 @@
   "imgs/lu_2.png" 1745271267.90764 343906 ff2cecfb2795054931a36558628af016 ""
   "imgs/qr_1.png" 1745272410.49148 235673 9a86dd7f2f773adabc93dfdbfb8956e2 ""
   "imgs/qr_2.png" 1745272419.7265 219671 e28a720a543c100bfb001c8be7e3f191 ""
-  "relatorio.aux" 1745711504.18308 2161 230c0a550669e83fb08371698f44774e "pdflatex"
-  "relatorio.out" 1745711504.18408 2375 6b823a5c6e6d76f272a3307fe0b17d61 "pdflatex"
-  "relatorio.tex" 1745711497.88304 24443 43860cd50bd64d05570e70dbf662093f ""
+  "relatorio.aux" 1745757890.08781 2161 230c0a550669e83fb08371698f44774e "pdflatex"
+  "relatorio.out" 1745757890.08881 2375 6b823a5c6e6d76f272a3307fe0b17d61 "pdflatex"
+  "relatorio.tex" 1745757885.95276 24443 d882a7c6d2a42d5df300a32c2fb287d4 ""
   (generated)
   "relatorio.aux"
   "relatorio.log"

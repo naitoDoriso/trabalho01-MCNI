@@ -266,7 +266,7 @@ Vinícius de Sá Ferreira -- 15491650}
 
     \subsection{Resultados}
 
-    Os tempos de execução registrados para cada método foram plotados no gráfico de barras, observada na \hyperlink{2}{\texttt{Figura 5}} para 9 pontos e na \hyperlink{6}{\texttt{Figura 12}}, para 435 pontos. Ao fazer a análise, observa-se que, para a matriz $M$ específica deste problema, que é simétrica e definida positiva (se trata de um grafo), o método de Cholesky apresentou o melhor desempenho, sendo o mais rápido entre as implementações baseadas em decomposição.
+    Os tempos de execução registrados para cada método foram plotados no gráfico de barras, observada na \hyperlink{2}{\texttt{Figura 5}} para 9 pontos e na \hyperlink{6}{\texttt{Figura 11}}, para 435 pontos. Ao fazer a análise, observa-se que, para a matriz $M$ específica deste problema, que é simétrica e definida positiva (se trata de um grafo), o método de Cholesky apresentou o melhor desempenho, sendo o mais rápido entre as implementações baseadas em decomposição.
 
     Isso está de acordo com a teoria e o que foi estudado nas análises dos métodos que conduzimos, pois Cholesky explora a simetria da matriz, resultando em aproximadamente metade das operações de ponto flutuante em comparação com a decomposição LU para matrizes densas (aproximadamente $\dfrac{1}{3}N^3$ vs $\dfrac{2}{3}N^3$ operações para a fatoração). A função \texttt{numpy.linalg.solve}, sendo uma aplicação altamente otimizada (frequentemente baseada em implementações LAPACK), apresentou um desempenho muito competitivo, potencialmente detectando a natureza da matriz e utilizando um solver apropriado internamente.
 
